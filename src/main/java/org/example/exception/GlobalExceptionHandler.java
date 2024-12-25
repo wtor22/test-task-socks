@@ -1,15 +1,10 @@
 package org.example.exception;
 
 import lombok.extern.slf4j.Slf4j;
-import org.example.exception.EntityAlreadyExistsException;
-import org.example.exception.InsufficientStockException;
-import org.example.exception.InvalidFileTypeException;
-import org.example.exception.NotFoundProductException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -28,7 +23,7 @@ public class GlobalExceptionHandler {
 
     // Обработка ошибок работы с файлами
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleGenericException(Exception ex, WebRequest request) {
+    public ResponseEntity<String> handleGenericException(Exception ex) {
         String response = ex.getMessage();
         log.error(response);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -111,7 +106,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<String> handleJsonParseException(HttpMessageNotReadableException ex) {
-        String response = "Некорректный формат данных в запросе";
+        String response = "Некорректный формат данных в запросе" + ex.getMessage();
         log.error("Ошибка: {}",response);
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
